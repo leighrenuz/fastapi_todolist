@@ -1,0 +1,233 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    height: 100vh; /* Full screen height */
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+  }
+  
+  /* App Container */
+  .app {
+    max-width: 600px;
+    width: 100%;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Header */
+  h1 {
+    color: #6f42c1; /* Purple for the header */
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  /* Input and Button styles */
+  input[type="text"] {
+    width: calc(100% - 100px);
+    padding: 12px;
+    margin-right: 10px;
+    border: 2px solid #d1d1d1;
+    border-radius: 5px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  
+  input[type="text"]:focus {
+    border-color: #6f42c1; /* Purple focus border */
+  }
+  
+  button {
+    padding: 12px 20px;
+    background-color: #28a745; /* Green button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px; /* Added margin to separate from the input */
+  }
+  
+  button:hover {
+    background-color: #218838; /* Darker green on hover */
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
+  button:active {
+    transform: scale(0.98);
+  }
+  
+  /* Task List */
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the tasks */
+  }
+  
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8f9fa; /* Light gray for each task */
+    padding: 12px;
+    margin-bottom: 12px;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Space between checkbox and text */
+  li input[type="checkbox"] {
+    margin-right: 15px; /* Add space between checkbox and task text */
+  }
+  
+  li.completed {
+    background-color: #d4edda; /* Light green for completed tasks */
+    text-decoration: line-through;
+    color: #6c757d;
+  }
+  
+  li:hover {
+    background-color: #f1f1f1; /* Slight hover effect */
+  }
+  
+  /* Task Text and Edit Button */
+  span {
+    font-size: 1.2rem;
+    flex-grow: 1;
+  }
+  
+  button.edit {
+    background-color: #ffc107; /* Yellow for edit button */
+    color: white;
+    font-size: 0.9rem;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px; /* Spacing between task text and edit button */
+  }
+  
+  button.edit:hover {
+    background-color: #e0a800; /* Darker yellow for hover */
+  }
+  
+  /* Dark Mode */
+  .dark {
+    background-color: #333;
+    color: white;
+  }
+  
+  .dark .app {
+    background-color: #444;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+  }
+  
+  .dark h1 {
+    color: #f0f4ff;
+  }
+  
+  .dark input[type="text"] {
+    background-color: #555;
+    color: white;
+    border: 2px solid #888;
+  }
+  
+  .dark input[type="text"]:focus {
+    border-color: #f0f4ff;
+  }
+  
+  .dark button {
+    background-color: #f0f4ff;
+    color: #333;
+  }
+  
+  .dark button:hover {
+    background-color: #b112ff; /* Purple for dark mode hover */
+    color: white;
+  }
+  
+  .dark ul li {
+    background-color: #444;
+  }
+  
+  .dark li.completed {
+    background-color: #5c6e5b; /* Greenish dark color for completed tasks */
+    text-decoration: line-through;
+    color: #a9b4a4;
+  }
+  
+  /* Filter Buttons */
+  button.filter {
+    padding: 12px 20px;
+    background-color: #007bff; /* Blue for filter buttons */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px; /* Spacing between buttons */
+    margin-right: 10px; /* Horizontal spacing between buttons */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button.filter:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  
+  button.filter:focus {
+    outline: none;
+  }
+  
+  /* Layout for Filter Buttons */
+  .filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Add gap between filter buttons */
+    margin-top: 20px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .app {
+      padding: 20px;
+    }
+  
+    input[type="text"] {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    button {
+      width: 100%;
+      margin-top: 10px; /* Consistent margin between buttons */
+    }
+  
+    button.filter {
+      width: 100%;
+    }
+  }

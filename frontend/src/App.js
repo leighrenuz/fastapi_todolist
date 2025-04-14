@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
-  // State for storing tasks and dark mode
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [filter, setFilter] = useState('all');
   const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/tasks');
+        setTasks(response.data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+    fetchTasks();
+  }, []);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -19,42 +31,57 @@ function App() {
     localStorage.setItem('theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
-  // Add Task
-  const addTask = () => {
+  const addTask = async () => {
     if (newTask.trim() === '') return;
-    const newTaskObj = { id: Date.now(), text: newTask, completed: false, editing: false };
-    setTasks([...tasks, newTaskObj]);
-    setNewTask('');
+
+    try {
+      const response = await axios.post('http://localhost:8000/tasks', {
+        title: newTask,
+        completed: false
+      });
+      setTasks([...tasks, response.data]);
+      setNewTask('');
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
   };
 
-  // Toggle Task Completion
-  const toggleCompletion = (id) => {
-    setTasks(tasks.map(task =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    ));
+  const toggleCompletion = async (id) => {
+    try {
+      const taskToUpdate = tasks.find(task => task.id === id);
+      const updatedTask = { ...taskToUpdate, completed: !taskToUpdate.completed };
+
+      const response = await axios.put(`http://localhost:8000/tasks/${id}`, updatedTask);
+      setTasks(tasks.map(task => task.id === id ? response.data : task));
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
   };
 
-  // Edit Task
-  const editTask = (id, newText) => {
-    setTasks(tasks.map(task =>
-      task.id === id ? { ...task, text: newText, editing: false } : task
-    ));
+  const editTask = async (id, newText) => {
+    try {
+      const response = await axios.put(`http://localhost:8000/tasks/${id}`, {
+        title: newText,
+      });
+      setTasks(tasks.map(task =>
+        task.id === id ? { ...task, text: response.data.title, editing: false } : task
+      ));
+    } catch (error) {
+      console.error("Error editing task:", error);
+    }
   };
 
-  // Start editing
   const startEditing = (id) => {
     setTasks(tasks.map(task =>
       task.id === id ? { ...task, editing: true } : task
     ));
   };
 
-  // Filter tasks
   const filteredTasks = tasks.filter(task => {
     if (filter === 'all') return true;
     return filter === 'completed' ? task.completed : !task.completed;
   });
 
-  // Set filter state
   const handleFilter = (filterValue) => {
     setFilter(filterValue);
   };

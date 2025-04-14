@@ -4,10 +4,27 @@ from pydantic import BaseModel
 from typing import List
 from database import SessionLocal, engine
 from models import Task, Base
+from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# Add CORS middleware for frontend access
+origins = [
+    "http://localhost",
+    "http://localhost:5173",
+    "https://appdevtodoapp.pages.dev",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Dependency
 def get_db():
@@ -22,12 +39,14 @@ class TaskCreate(BaseModel):
     title: str
 
 class TaskUpdate(BaseModel):
-    title: str
-    completed: bool
+    title: str = None
+    completed: bool = None
 
 class TaskOut(TaskCreate):
     id: int
     completed: bool
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
@@ -58,8 +77,8 @@ def update_task(task_id: int, updated: TaskUpdate, db: Session = Depends(get_db)
     task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
-    task.title = updated.title
-    task.completed = updated.completed
+    for key, value in updated.dict(exclude_unset=True).items():
+        setattr(task, key, value)
     db.commit()
     db.refresh(task)
     return task
